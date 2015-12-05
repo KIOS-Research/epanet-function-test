@@ -8,8 +8,8 @@ function [ output_args ] = compareEPANET(oldversion, newversion)
         addpath(genpath(pwd))
         currentDir = pwd;
     end
-    oldversion='epanet20012';
-    newversion='epanet2dev21';
+    %oldversion='epanet20012';
+    %newversion='epanet2dev21';
 	inpname={'Net1.inp','Net2.inp','Net3.inp'};
     %inpname={'BWSN1.inp'};
     fileID = fopen('report.txt','w');
