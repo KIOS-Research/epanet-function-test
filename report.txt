@@ -1,0 +1,68 @@
+Comparison epanet20012 with epanet2dev21
+Function "ENaddcurve" is new.
+Function "ENgetaveragepatternvalue" is new.
+Function "ENgetbasedemand" is new.
+Function "ENgetcoord" is new.
+Function "ENgetcurve" is new.
+Function "ENgetcurveid" is new.
+Function "ENgetcurveindex" is new.
+Function "ENgetcurvelen" is new.
+Function "ENgetcurvevalue" is new.
+Function "ENgetdemandpattern" is new.
+Function "ENgetheadcurveindex" is new.
+Function "ENgetnumdemands" is new.
+Function "ENgetpumptype" is new.
+Function "ENgetqualinfo" is new.
+Function "ENgetstatistic" is new.
+Function "ENsetbasedemand" is new.
+Function "ENsetcoord" is new.
+Function "ENsetcurve" is new.
+Function "ENsetcurvevalue" is new.
+
+
+Net1.inp
+----------------
+Difference in ENsaveinpfile. See Net1.inp.html
+Difference in ENgeterror. 253
+Difference in tank volumes: -5.448 
+Difference in version 20012 and 20100.
+Difference in pattern name ID.
+Difference in tank diameter: -0.812 
+Difference in options quality tolerance: 0.564 
+Difference in setting time rule control step (bug): -2.556 
+Difference in setting report QUALITY PRECISION 1
+Difference in setting report STATUS YES
+
+##############################################
+
+Net2.inp
+----------------
+Difference in ENsaveinpfile. See Net2.inp.html
+Difference in ENgeterror. 253
+Difference in tank volumes: -5.107 
+Difference in version 20012 and 20100.
+Difference in pattern name ID.
+Difference in tank diameter: -0.807 
+Difference in options quality tolerance: 0.564 
+Difference in setting time rule control step (bug): -2.556 
+Problem in writing line in Report File (new dll).
+Difference in setting report ENERGY YES
+Difference in setting report QUALITY PRECISION 1
+Difference in setting report STATUS YES
+
+##############################################
+
+Net3.inp
+----------------
+Difference in ENsaveinpfile. See Net3.inp.html
+Difference in ENgeterror. 253
+Difference in tank volumes: -5.871 
+Difference in version 20012 and 20100.
+Difference in pattern name ID.
+Difference in tank diameter: -1.323 
+Difference in setting time rule control step (bug): -2.556 
+Difference in setting report QUALITY PRECISION 1
+Difference in setting report STATUS YES
+
+##############################################
+

@@ -1,6 +1,6 @@
 classdef epanet <handle
     %epanet EPANET-Matlab Class: A Matlab Class for EPANET and EPANET-MSX
-    %
+    %   with modifications 5 December 2015
     %   How to run: n=epanet('Net1_Rossman2000.inp');
     %
     %   EPANET is software that models water distribution piping systems
