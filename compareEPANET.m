@@ -28,8 +28,8 @@ function unitTesting(oldversion,newversion,inpname,looptime,fileID)
     epanet1.saveInputFile('tmp1.inp');
     
     % simulate all
-    HTSepanet1=epanet1.getComputedHydraulicTimeSeries; % Also are included: obj.openHydraulicAnalysis;obj.initializeHydraulicAnalysis;obj.runHydraulicAnalysis;obj.nextHydraulicAnalysisStep;obj.closeHydraulicAnalysis;
-    QTSepanet1=epanet1.getComputedQualityTimeSeries;   % Also are included: obj.openQualityAnalysis;obj.initializeQualityAnalysis;obj.runQualityAnalysis;obj.stepQualityAnalysisTimeLeft;obj.closeQualityAnalysis;
+%     HTSepanet1=epanet1.getComputedHydraulicTimeSeries; % Also are included: obj.openHydraulicAnalysis;obj.initializeHydraulicAnalysis;obj.runHydraulicAnalysis;obj.nextHydraulicAnalysisStep;obj.closeHydraulicAnalysis;
+%     QTSepanet1=epanet1.getComputedQualityTimeSeries;   % Also are included: obj.openQualityAnalysis;obj.initializeQualityAnalysis;obj.runQualityAnalysis;obj.stepQualityAnalysisTimeLeft;obj.closeQualityAnalysis;
     i=1;% Errors
     E=[0:6,101:106,110,120,200,202:207,223:224, 240:241, 250:251,253, 301:309];
     for e=E
@@ -41,7 +41,7 @@ function unitTesting(oldversion,newversion,inpname,looptime,fileID)
 
 
     epanet2=epanet(inpname,newversion);
-    
+
     if looptime==1
         libfunctionsepanet2 = libfunctions(newversion);
         for i=1:length(libfunctionsepanet2)
@@ -57,9 +57,11 @@ function unitTesting(oldversion,newversion,inpname,looptime,fileID)
     fprintf(fileID,'\n----------------\n');
     
     % simulate all
-    HTSepanet2=epanet2.getComputedHydraulicTimeSeries;
-    QTSepanet2=epanet2.getComputedQualityTimeSeries; 
-    
+%     HTSepanet2=epanet2.getBinComputedAllParameters;
+%     QTSepanet2=epanet2.getComputedQualityTimeSeries; 
+    HQTSepanet1=epanet1.getBinComputedAllParameters;
+    HQTSepanet2=epanet2.getBinComputedAllParameters;
+
     % Save Inp File
     epanet2.saveInputFile('tmp2.inp');    
     tmp2=fileread('tmp2.inp');
@@ -87,8 +89,8 @@ function unitTesting(oldversion,newversion,inpname,looptime,fileID)
         fprintf(fileID,'Difference in computed times samples.\n');
     end
     
-    if ~isequal(HTSepanet1.Demand,HTSepanet2.Demand)
-        fprintf(fileID,'Difference in demands: %3.3f \n',min(min(-log10(abs(HTSepanet1.Demand(b,:)-HTSepanet2.Demand(b,:))))));
+    if ~isequal(HQTSepanet1.BinnodeDemand,HQTSepanet2.BinnodeDemand)
+        fprintf(fileID,'Difference in demands: %3.3f \n',min(min(-log10(abs(HQTSepanet1.BinnodeDemand(b,:)-HQTSepanet2.BinnodeDemand(b,:))))));
     end
     if ~isequal(HTSepanet1.Energy,HTSepanet2.Energy) 
         fprintf(fileID,'Difference in energy: %3.3f \n',min(min(-log10(abs(HTSepanet1.Energy-HTSepanet2.Energy)))));
@@ -236,14 +238,15 @@ function unitTesting(oldversion,newversion,inpname,looptime,fileID)
     if ~isequal(epanet1.NodeElevations,epanet2.NodeElevations)
         fprintf(fileID,'Difference in node elevation: %3.3f \n',min(min(-log10(abs(epanet1.NodeElevations-epanet2.NodeElevations)))));
     end
-    if ~isequal(cell2mat(epanet1.NodeBaseDemands),epanet2.NodeBaseDemands{1}) % does not check for multipe demands
-        fprintf(fileID,'Difference in node basedemand (demand categories - epanet2): %3.3f \n',min(min(-log10(abs(epanet1.NodeBaseDemands-epanet2.NodeBaseDemands)))));
+%     if ~isequal(cell2mat(epanet1.NodeBaseDemands),epanet2.NodeBaseDemands{1}) % does not check for multipe demands
+    if ~isequal(epanet1.NodeBaseDemands,epanet2.NodeBaseDemands{1}) % does not check for multipe demands
+        fprintf(fileID,'Difference in node basedemand (demand categories - epanet2): %3.3f \n',min(min(-log10(abs(epanet1.NodeBaseDemands-epanet2.NodeBaseDemands{1})))));
     end
     %pp = epanet2.getBinNodesInfo;
-    %if ~strcmp(pp.BinNodeDemandPatternNameID,epanet2.NodeDemandPatternNameID) %epanet20013
-    if ~strcmp(epanet1.NodeDemandPatternNameID,epanet2.NodeDemandPatternNameID) %epanet20013
-        fprintf(fileID,'Difference in pattern name ID.\n');
-    end
+    %if ~strcmp(pp.BinNodeDemandPatternNameID,epanet2.NodeDemandPatternNameID) 
+%     if ~strcmp(epanet1.NodeDemandPatternNameID,epanet2.NodeDemandPatternNameID) 
+%         fprintf(fileID,'Difference in pattern name ID.\n');
+%     end
     if ~isequal(epanet1.NodeInitialQuality,epanet2.NodeInitialQuality)
         fprintf(fileID,'Difference in node initial quality: %3.3f \n',min(min(-log10(abs(epanet1.NodeInitialQuality-epanet2.NodeInitialQuality)))));
     end
@@ -253,7 +256,7 @@ function unitTesting(oldversion,newversion,inpname,looptime,fileID)
     if ~isequal(isnan(epanet1.NodeSourcePatternIndex),isnan(epanet2.NodeSourcePatternIndex))
         fprintf(fileID,'Difference in node source pattern.\n');
     end
-    if ~isequal(epanet1.NodeSourceTypeIndex,epanet2.NodeSourceTypeIndex)
+    if ~isequal(epanet1.NodeSourceTypeIndex,epanet2.NodeSourceTypeIndex) && ~isequal(sum(isnan(epanet1.NodeSourceTypeIndex)),sum(isnan(epanet2.NodeSourceTypeIndex)))
         fprintf(fileID,'Difference in source type.\n');
     end
     if ~(strcmp(epanet1.NodesConnectingLinksID,epanet2.NodesConnectingLinksID))
@@ -263,7 +266,7 @@ function unitTesting(oldversion,newversion,inpname,looptime,fileID)
     
     % Node Tank data
     if epanet1.NodeTankCount
-        if ~isequal(epanet1.NodeTankInitialLevel,epanet2.NodeTankInitialLevel)
+        if ~isequal(epanet1.NodeTankInitialLevel(epanet1.NodeTankIndex),epanet2.NodeTankInitialLevel(epanet2.NodeTankIndex))
             fprintf(fileID,'Difference in tank initial level: %3.3f \n',min(min(-log10(abs(epanet1.NodeTankInitialLevel-epanet2.NodeTankInitialLevel)))));
         end
         if ~isequal(epanet1.NodeTankMinimumWaterVolume,epanet2.NodeTankMinimumWaterVolume)
@@ -482,7 +485,7 @@ function unitTesting(oldversion,newversion,inpname,looptime,fileID)
         fprintf(fileID,'Difference in setting link wall reaction coeff: %3.3f \n',min(min(-log10(abs(linkWallReactionCoeffBefore(1:epanet2.LinkPipeCount)-linkWallReactionCoeffAfter(1:epanet2.LinkPipeCount))))));
     end
 
-    linkStatusBefore=ones(1,length(epanet2.LinkStatus));
+    linkStatusBefore=ones(1,length(epanet2.getLinkStatus));
     epanet2.setLinkStatus(linkStatusBefore);
     linkStatusAfter=epanet2.getLinkStatus;
     if ~isequal(linkStatusAfter,linkStatusAfter)
@@ -507,21 +510,21 @@ function unitTesting(oldversion,newversion,inpname,looptime,fileID)
         fprintf(fileID,'Difference in setting node elevations: %3.3f \n',min(min(-log10(abs(nodeElevationsBefore-nodeElevationsAfter)))));
     end
 
-    % NodeBaseDemandsBefore=epanet2.NodeBaseDemands;
-    % NodeBaseDemandsBefore(2)=NodeBaseDemandsBefore(2)+5;
-    % epanet2.setNodeBaseDemands(NodeBaseDemandsBefore);
-    % NodeBaseDemandsAfter=epanet2.NodeBaseDemands;
-    % if ~isequal(NodeBaseDemandsBefore,NodeBaseDemandsAfter)
-    %     fprintf(fileID,'Difference in setting node basedemands.\n');
-    % end
-    % 
-    % NodeDemandPatternIndexBefore=epanet2.NodeDemandPatternIndex;
-    % NodeDemandPatternIndexBefore(2)=0;
-    % epanet2.setNodeDemandPatternIndex(NodeDemandPatternIndexBefore);
-    % NodeDemandPatternIndexAfter=epanet2.NodeDemandPatternIndex;
-    % if ~isequal(NodeDemandPatternIndexBefore,NodeDemandPatternIndexAfter)
-    %     fprintf(fileID,'Difference in setting node demand pattern index.\n');
-    % end
+    NodeBaseDemandsBefore=epanet2.NodeBaseDemands;
+    NodeBaseDemandsBefore{1}(2)=NodeBaseDemandsBefore{1}(2)+5;
+    epanet2.setNodeBaseDemands(NodeBaseDemandsBefore);
+    NodeBaseDemandsAfter=epanet2.getNodeBaseDemands;
+    if ~isequal(NodeBaseDemandsBefore{1},NodeBaseDemandsAfter{1})
+        fprintf(fileID,'Difference in setting node basedemands.\n');
+    end
+    
+    NodeDemandPatternIndexBefore=epanet2.NodeDemandPatternIndex;
+    NodeDemandPatternIndexBefore{1}(2)=0;
+    epanet2.setNodeDemandPatternIndex(NodeDemandPatternIndexBefore);
+    NodeDemandPatternIndexAfter=epanet2.getNodeDemandPatternIndex;
+    if ~isequal(NodeDemandPatternIndexBefore{1},NodeDemandPatternIndexAfter{1})
+        fprintf(fileID,'Difference in setting node demand pattern index.\n');
+    end
 
     NodeEmitterCoeffBefore=epanet2.NodeEmitterCoeff;
     NodeEmitterCoeffBefore(2)=0.5;
@@ -545,7 +548,7 @@ function unitTesting(oldversion,newversion,inpname,looptime,fileID)
         NodeTankInitialLevelBefore(end)=NodeTankInitialLevelBefore(end)+5;
         epanet2.setNodeTankInitialLevel(NodeTankInitialLevelBefore);
         NodeTankInitialLevelAfter=epanet2.getNodeTankInitialLevel;
-        if ~isequal(NodeTankInitialLevelBefore,NodeTankInitialLevelAfter)
+        if ~isequal(NodeTankInitialLevelBefore(epanet2.NodeTankIndex),NodeTankInitialLevelAfter(epanet1.NodeTankIndex))
             fprintf(fileID,'Difference in setting node tank initial level: %3.3f \n',min(min(-log10(abs(NodeTankInitialLevelBefore-NodeTankInitialLevelAfter)))));
         end
 

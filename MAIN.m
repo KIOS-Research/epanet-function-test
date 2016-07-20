@@ -1,1 +1,1 @@
-compareEPANET('epanet20012', 'epanet2dev21')
+compareEPANET('epanet20012x86', 'epanet2dev21x86')
