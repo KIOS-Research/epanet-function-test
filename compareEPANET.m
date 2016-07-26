@@ -10,39 +10,59 @@ function [ output_args ] = compareEPANET(oldversion, newversion)
     end
     %oldversion='epanet20012';
     %newversion='epanet2dev21';
-	inpname={'Net1.inp','Net2.inp','Net3.inp'};
+	inpname={'Example_2.inp','Net2.inp','Net3.inp'};
     %inpname={'BWSN1.inp'};
-    fileID = fopen('report.txt','w');
-    fprintf(fileID,['Comparison ', oldversion,' with ',newversion,'\n']);
+    repfile='report.txt';
     for i=1:length(inpname)
-        unitTesting(oldversion,newversion,inpname{i},i,fileID);
+        unitTesting(oldversion,newversion,inpname{i},i,repfile);
         pause(2)
     end
-    fclose(fileID);
     disp('finish')
 end
 
-function unitTesting(oldversion,newversion,inpname,looptime,fileID)
+function unitTesting(oldversion,newversion,inpname,looptime,repfile)
     disp(inpname)
     epanet1=epanet(inpname,oldversion);
     epanet1.saveInputFile('tmp1.inp');
-    
+
     % simulate all
-%     HTSepanet1=epanet1.getComputedHydraulicTimeSeries; % Also are included: obj.openHydraulicAnalysis;obj.initializeHydraulicAnalysis;obj.runHydraulicAnalysis;obj.nextHydraulicAnalysisStep;obj.closeHydraulicAnalysis;
-%     QTSepanet1=epanet1.getComputedQualityTimeSeries;   % Also are included: obj.openQualityAnalysis;obj.initializeQualityAnalysis;obj.runQualityAnalysis;obj.stepQualityAnalysisTimeLeft;obj.closeQualityAnalysis;
+%     HQTSepanet1=epanet1.getComputedHydraulicTimeSeries; % Also are included: obj.openHydraulicAnalysis;obj.initializeHydraulicAnalysis;obj.runHydraulicAnalysis;obj.nextHydraulicAnalysisStep;obj.closeHydraulicAnalysis;
+%     HQTSepanet1=epanet1.getComputedQualityTimeSeries;   % Also are included: obj.openQualityAnalysis;obj.initializeQualityAnalysis;obj.runQualityAnalysis;obj.stepQualityAnalysisTimeLeft;obj.closeQualityAnalysis;
     i=1;% Errors
     E=[0:6,101:106,110,120,200,202:207,223:224, 240:241, 250:251,253, 301:309];
     for e=E
         epanet1Error{i}=epanet1.getError(e);i=i+1;
     end
     libfunctionsepanet1 = libfunctions(oldversion);
+    
+    HQTSepanet1 = epanet1.getBinComputedAllParameters('epanet2d20012');
+    epanet1BinnodeDemand = HQTSepanet1.BinnodeDemand;
+    epanet1BinnodeHead = HQTSepanet1.BinnodeHead;
+    epanet1BinnodePressure = HQTSepanet1.BinnodePressure;
+    epanet1BinnodeQuality = HQTSepanet1.BinnodeQuality;
+    epanet1BinlinkFlow = HQTSepanet1.BinlinkFlow;
+    epanet1BinlinkVelocity = HQTSepanet1.BinlinkVelocity;
+    epanet1BinlinkHeadloss = HQTSepanet1.BinlinkHeadloss;
+    epanet1BinlinkStatus = HQTSepanet1.BinlinkStatus;
+    epanet1BinNumberReportingPeriods = HQTSepanet1.BinNumberReportingPeriods;
+    epanet1BinlinkQuality = HQTSepanet1.BinlinkQuality;
+    epanet1BinlinkSetting = HQTSepanet1.BinlinkSetting;
+    epanet1BinlinkReactionRate = HQTSepanet1.BinlinkReactionRate;
+    epanet1BinlinkFrictionFactor = HQTSepanet1.BinlinkFrictionFactor;    
+    epanet1BinAverageKwatts = HQTSepanet1.BinAverageKwatts;
+    epanet1BinAverageSourceInflowRate = HQTSepanet1.BinAverageSourceInflowRate;
+    clear HQTSepanet1;
+    
+    
     %epanet1.closeNetwork
     epanet1.unload;
 
-
     epanet2=epanet(inpname,newversion);
-
+    
+    
     if looptime==1
+        fileID = fopen(repfile,'w');
+        fprintf(fileID,['Comparison ', oldversion,' with ',newversion,'\n']);
         libfunctionsepanet2 = libfunctions(newversion);
         for i=1:length(libfunctionsepanet2)
             if ~strcmp(libfunctionsepanet2{i},libfunctionsepanet1)
@@ -51,17 +71,20 @@ function unitTesting(oldversion,newversion,inpname,looptime,fileID)
             end
         end
         fprintf(fileID,'\n\n');
-    end    
+    else
+        [tline]=regexp( fileread(repfile), '\n', 'split');
+        fileID = fopen(repfile,'w');        
+        for i=1:length(tline)
+            fprintf(fileID,'%s\n', tline{i});
+        end
+    end
     
     fprintf(fileID,inpname);
     fprintf(fileID,'\n----------------\n');
     
     % simulate all
-%     HTSepanet2=epanet2.getBinComputedAllParameters;
-%     QTSepanet2=epanet2.getComputedQualityTimeSeries; 
-    HQTSepanet1=epanet1.getBinComputedAllParameters;
-    HQTSepanet2=epanet2.getBinComputedAllParameters;
-
+%     HQTSepanet2=epanet2.getBinComputedAllParameters;
+%     HQTSepanet2=epanet2.getComputedQualityTimeSeries; 
     % Save Inp File
     epanet2.saveInputFile('tmp2.inp');    
     tmp2=fileread('tmp2.inp');
@@ -74,7 +97,16 @@ function unitTesting(oldversion,newversion,inpname,looptime,fileID)
         fclose(fileID2);
     end
 
+    clear tmp tmp1 tmp2 libfunctionsepanet1 libfunctionsepanet2 
+    HQTSepanet2 = epanet2.getBinComputedAllParameters('epanet2d21');
 
+%     if looptime>1
+    [tline]=regexp( fileread(repfile), '\n', 'split');
+    fileID = fopen(repfile,'w');        
+    for i=1:length(tline)
+        fprintf(fileID,'%s\n', tline{i});
+    end
+%     end
     %% Errors
     e=E;
     for i=1:length(epanet1Error) 
@@ -82,56 +114,57 @@ function unitTesting(oldversion,newversion,inpname,looptime,fileID)
             fprintf(fileID,['Difference in ENgeterror. ', num2str(e(i)),'\n']);
         end
     end
+    clear epanet1Error
     
     %% Simulate all
     % Hydraulic analysis
-    if ~isequal(HTSepanet1.Time,HTSepanet2.Time)
+    if ~isequal(0:epanet1.TimeReportingStep:(epanet1BinNumberReportingPeriods-1)*3600,0:epanet2.TimeReportingStep:(HQTSepanet2.BinNumberReportingPeriods-1)*3600)
         fprintf(fileID,'Difference in computed times samples.\n');
     end
     
-    if ~isequal(HQTSepanet1.BinnodeDemand,HQTSepanet2.BinnodeDemand)
-        fprintf(fileID,'Difference in demands: %3.3f \n',min(min(-log10(abs(HQTSepanet1.BinnodeDemand(b,:)-HQTSepanet2.BinnodeDemand(b,:))))));
+    if ~isequal(epanet1BinnodeDemand,HQTSepanet2.BinnodeDemand)
+        fprintf(fileID,'Difference in demands: %3.3f \n',min(min(-log10(abs(epanet1BinnodeDemand-HQTSepanet2.BinnodeDemand)))));
     end
-    if ~isequal(HTSepanet1.Energy,HTSepanet2.Energy) 
-        fprintf(fileID,'Difference in energy: %3.3f \n',min(min(-log10(abs(HTSepanet1.Energy-HTSepanet2.Energy)))));
+    if ~isequal(epanet1BinAverageKwatts,HQTSepanet2.BinAverageKwatts) 
+        fprintf(fileID,'Difference in average Kwatts: %3.3f \n',min(min(-log10(abs(epanet1BinAverageKwatts-HQTSepanet2.BinAverageKwatts)))));
     end
-    if ~isequal(HTSepanet1.Flow,HTSepanet2.Flow)
-        fprintf(fileID,'Difference in flows: %3.3f \n',min(min(-log10(abs(HTSepanet1.Flow-HTSepanet2.Flow)))));
+    if ~isequal(epanet1BinlinkFlow,HQTSepanet2.BinlinkFlow)
+        fprintf(fileID,'Difference in flows: %3.3f \n',min(min(-log10(abs(epanet1BinlinkFlow-HQTSepanet2.BinlinkFlow)))));
     end
-    if ~isequal(HTSepanet1.Head,HTSepanet2.Head)
-        fprintf(fileID,'Difference in heads: %3.3f \n',min(min(-log10(abs(HTSepanet1.Head-HTSepanet2.Head)))));
+    if ~isequal(epanet1BinnodeHead,HQTSepanet2.BinnodeHead)
+        fprintf(fileID,'Difference in heads: %3.3f \n',min(min(-log10(abs(epanet1BinnodeHead-HQTSepanet2.BinnodeHead)))));
     end
-    if ~isequal(HTSepanet1.HeadLoss,HTSepanet2.HeadLoss)
-        fprintf(fileID,'Difference in headloss: %3.3f \n',min(min(-log10(abs(HTSepanet1.HeadLoss-HTSepanet2.HeadLoss)))));
+    if ~isequal(epanet1BinlinkHeadloss,HQTSepanet2.BinlinkHeadloss)
+        fprintf(fileID,'Difference in headloss: %3.3f \n',min(min(-log10(abs(epanet1BinlinkHeadloss-HQTSepanet2.BinlinkHeadloss)))));
     end
-    if ~isequal(HTSepanet1.Pressure,HTSepanet2.Pressure)
-        fprintf(fileID,'Difference in pressures: %3.3f \n',min(min(-log10(abs(HTSepanet1.Pressure-HTSepanet2.Pressure)))));
+    if ~isequal(epanet1BinnodePressure,HQTSepanet2.BinnodePressure)
+        fprintf(fileID,'Difference in pressures: %3.3f \n',min(min(-log10(abs(epanet1BinnodePressure-HQTSepanet2.BinnodePressure)))));
     end
-    if ~isequal(HTSepanet1.Setting,HTSepanet2.Setting)
-        fprintf(fileID,'Difference in settingtings: %3.3f \n',min(min(-log10(abs(HTSepanet1.Setting-HTSepanet2.Setting)))));
+    if ~isequal(epanet1BinlinkSetting,HQTSepanet2.BinlinkSetting)
+        fprintf(fileID,'Difference in settings: %3.3f \n',min(min(-log10(abs(epanet1BinlinkSetting-HQTSepanet2.BinlinkSetting)))));
     end
-    if ~isequal(HTSepanet1.Status,HTSepanet2.Status) 
-        fprintf(fileID,'Difference in status: %3.3f \n',min(min(-log10(abs(HTSepanet1.Status-HTSepanet2.Status)))));
+    if ~isequal(epanet1BinlinkStatus,HQTSepanet2.BinlinkStatus) 
+        fprintf(fileID,'Difference in status: %3.3f \n',min(min(-log10(abs(epanet1BinlinkStatus-HQTSepanet2.BinlinkStatus)))));
     end
-    if ~isequal(HTSepanet1.TankVolume(:,epanet1.NodeTankIndex),HTSepanet2.TankVolume(:,epanet2.NodeTankIndex))
-        fprintf(fileID,'Difference in tank volumes: %3.3f \n',min(min(-log10(abs(HTSepanet1.TankVolume(:,epanet1.NodeTankIndex)-HTSepanet2.TankVolume(:,epanet2.NodeTankIndex)))))); 
-    end
-    if ~isequal(HTSepanet1.Time,HTSepanet2.Time) 
-        fprintf(fileID,'Difference in times: %3.3f \n',min(min(-log10(abs(HTSepanet1.Time-HTSepanet2.Time))))); 
-    end
-    if ~isequal(HTSepanet1.Velocity,HTSepanet2.Velocity)
-        fprintf(fileID,'Difference in velocity: %3.3f \n',min(min(-log10(abs(HTSepanet1.Velocity-HTSepanet2.Velocity)))));
+%     if ~isequal(HQTSepanet1.TankVolume(:,epanet1.NodeTankIndex),HQTSepanet2.TankVolume(:,epanet2.NodeTankIndex))
+%         fprintf(fileID,'Difference in tank volumes: %3.3f \n',min(min(-log10(abs(HQTSepanet1.TankVolume(:,epanet1.NodeTankIndex)-HQTSepanet2.TankVolume(:,epanet2.NodeTankIndex)))))); 
+%     end
+%     if ~isequal(HQTSepanet1.Time,HQTSepanet2.Time) 
+%         fprintf(fileID,'Difference in times: %3.3f \n',min(min(-log10(abs(HQTSepanet1.Time-HQTSepanet2.Time))))); 
+%     end
+    if ~isequal(epanet1BinlinkVelocity,HQTSepanet2.BinlinkVelocity)
+        fprintf(fileID,'Difference in velocity: %3.3f \n',min(min(-log10(abs(epanet1BinlinkVelocity-HQTSepanet2.BinlinkVelocity)))));
     end    
     % Quality analysis
-    if ~isequal(QTSepanet1.MassFlowRate,QTSepanet2.MassFlowRate) && ~isequal(isnan(QTSepanet1.MassFlowRate),isnan(QTSepanet2.MassFlowRate))
-        fprintf(fileID,'Difference in mass flow rate: %3.3f \n',min(min(-log10(abs(QTSepanet1.MassFlowRate-QTSepanet2.MassFlowRate)))));
+    if ~isequal(epanet1BinAverageSourceInflowRate,HQTSepanet2.BinAverageSourceInflowRate) && ~isequal(isnan(epanet1BinAverageSourceInflowRate),isnan(HQTSepanet2.BinAverageSourceInflowRate))
+        fprintf(fileID,'Difference in average source in flow rate: %3.3f \n',min(min(-log10(abs(epanet1BinAverageSourceInflowRate-HQTSepanet2.BinAverageSourceInflowRate)))));
     end
-    if ~isequal(QTSepanet1.Quality,QTSepanet2.Quality) 
-        fprintf(fileID,'Difference in quality results: %3.3f \n',min(min(-log10(abs(QTSepanet1.Quality-QTSepanet2.Quality)))));
+    if ~isequal(epanet1BinnodeQuality,HQTSepanet2.BinnodeQuality) 
+        fprintf(fileID,'Difference in quality results: %3.3f \n',min(min(-log10(abs(epanet1BinnodeQuality-HQTSepanet2.BinnodeQuality)))));
     end
-    if ~isequal(QTSepanet1.Time,QTSepanet2.Time)
-        fprintf(fileID,'Difference in time: %3.3f \n',min(min(-log10(abs(QTSepanet1.Time-QTSepanet2.Time)))));
-    end
+%     if ~isequal(HQTSepanet1.Time,HQTSepanet2.Time)
+%         fprintf(fileID,'Difference in time: %3.3f \n',min(min(-log10(abs(HQTSepanet1.Time-HQTSepanet2.Time)))));
+%     end
     
     if ~isequal(epanet1.Version,epanet2.Version)
         fprintf(fileID,'Difference in version %i and %i.\n',epanet1.Version,epanet2.Version);
@@ -1083,4 +1116,6 @@ function unitTesting(oldversion,newversion,inpname,looptime,fileID)
     %epanet2.closeNetwork
     epanet2.unload
     fprintf(fileID,'\n##############################################\n\n');
+
+    fclose(fileID);
 end
