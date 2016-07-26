@@ -2075,7 +2075,7 @@ classdef epanet <handle
             if nargin==3, indices = value; value=varargin{1};  else  indices = getLinkIndices(obj,varargin); end
             for i=indices
                 [obj.errcode] = ENsetlinkvalue(i, 11, value(i),obj.libepanet);
-                if obj.errcode, error(obj.getError(obj.errcode)), return; end   
+%                 if obj.errcode, error(obj.getError(obj.errcode)), return; end   
             end
         end
         function setLinkSettings(obj, value, varargin)
@@ -5579,92 +5579,92 @@ classdef epanet <handle
             [value] = ENplot(obj,'bin',1,varargin{:});
         end
         function value = getBinNumberReportingPeriods(obj,varargin)
-            value = getBinComputedTimeSeries(obj,27);
+            value = getBinComputedTimeSeries(obj,27,varargin);
         end
         function value = getBinSimulationDuration(obj,varargin)
-            value = getBinComputedTimeSeries(obj,28);
+            value = getBinComputedTimeSeries(obj,28,varargin);
         end
         function value = getBinElevationEachNode(obj,varargin)
-            value = getBinComputedTimeSeries(obj,1);
+            value = getBinComputedTimeSeries(obj,1,varargin);
         end
         function value = getBinLengthEachLink(obj,varargin)
-            value = getBinComputedTimeSeries(obj,2);
+            value = getBinComputedTimeSeries(obj,2,varargin);
         end
         function value = getBinDiameterEachLink(obj,varargin)
-            value = getBinComputedTimeSeries(obj,3);
+            value = getBinComputedTimeSeries(obj,3,varargin);
         end
         function value = getBinComputedPumpIndexListLinks(obj,varargin)
-            value = getBinComputedTimeSeries(obj,4);
+            value = getBinComputedTimeSeries(obj,4,varargin);
         end
         function value = getBinComputedPumpUtilization(obj,varargin)
-            value = getBinComputedTimeSeries(obj,5);
+            value = getBinComputedTimeSeries(obj,5,varargin);
         end
         function value = getBinComputedAverageEfficiency(obj,varargin)
-            value = getBinComputedTimeSeries(obj,6);
+            value = getBinComputedTimeSeries(obj,6,varargin);
         end
         function value = getBinComputedAverageKwattsOrMillionGallons(obj,varargin)
-            value = getBinComputedTimeSeries(obj,7);
+            value = getBinComputedTimeSeries(obj,7,varargin);
         end
         function value = getBinComputedAverageKwatts(obj,varargin)
-            value = getBinComputedTimeSeries(obj,8);
+            value = getBinComputedTimeSeries(obj,8,varargin);
         end
         function value = getBinComputedPeakKwatts(obj,varargin)
-            value = getBinComputedTimeSeries(obj,9);
+            value = getBinComputedTimeSeries(obj,9,varargin);
         end
         function value = getBinComputedAverageCostPerDay(obj,varargin)
-            value = getBinComputedTimeSeries(obj,10);
+            value = getBinComputedTimeSeries(obj,10,varargin);
         end
         function value = getBinComputedNodeDemand(obj,varargin)
-            value = getBinComputedTimeSeries(obj,11);
+            value = getBinComputedTimeSeries(obj,11,varargin);
         end
         function value = getBinComputedNodeHead(obj,varargin)
-            value = getBinComputedTimeSeries(obj,12);
+            value = getBinComputedTimeSeries(obj,12,varargin);
         end
         function value = getBinComputedNodePressure(obj,varargin)
-            value = getBinComputedTimeSeries(obj,13);
+            value = getBinComputedTimeSeries(obj,13,varargin);
         end
         function value = getBinComputedNodeQuality(obj,varargin)
-            value = getBinComputedTimeSeries(obj,14);
+            value = getBinComputedTimeSeries(obj,14,varargin);
         end
         function value = getBinComputedLinkFlow(obj,varargin)
-            value = getBinComputedTimeSeries(obj,15);
+            value = getBinComputedTimeSeries(obj,15,varargin);
         end
         function value = getBinComputedLinkVelocity(obj,varargin)
-            value = getBinComputedTimeSeries(obj,16);
+            value = getBinComputedTimeSeries(obj,16,varargin);
         end
         function value = getBinComputedLinkHeadloss(obj,varargin)
-            value = getBinComputedTimeSeries(obj,17);
+            value = getBinComputedTimeSeries(obj,17,varargin);
         end
         function value = getBinComputedLinkQuality(obj,varargin)
-            value = getBinComputedTimeSeries(obj,18);
+            value = getBinComputedTimeSeries(obj,18,varargin);
         end
         function value = getBinComputedLinkStatus(obj,varargin)
-            value = getBinComputedTimeSeries(obj,19);
+            value = getBinComputedTimeSeries(obj,19,varargin);
         end
         function value = getBinComputedLinkSetting(obj,varargin)
-            value = getBinComputedTimeSeries(obj,20);
+            value = getBinComputedTimeSeries(obj,20,varargin);
         end
         function value = getBinComputedLinkReactionRate(obj,varargin)
-            value = getBinComputedTimeSeries(obj,21);
+            value = getBinComputedTimeSeries(obj,21,varargin);
         end
         function value = getBinComputedLinkFrictionFactor(obj,varargin)
-            value = getBinComputedTimeSeries(obj,22);
+            value = getBinComputedTimeSeries(obj,22,varargin);
         end
         function value = getBinComputedAverageBulkReactionRate(obj,varargin)
-            value = getBinComputedTimeSeries(obj,23);
+            value = getBinComputedTimeSeries(obj,23,varargin);
         end
         function value = getBinComputedAverageWallReactionRate(obj,varargin)
-            value = getBinComputedTimeSeries(obj,24);
+            value = getBinComputedTimeSeries(obj,24,varargin);
         end
         function value = getBinComputedAverageTankReactionRate(obj,varargin)
-            value = getBinComputedTimeSeries(obj,25);
+            value = getBinComputedTimeSeries(obj,25,varargin);
         end
         function value = getBinComputedAverageSourceInflow(obj,varargin)
-            value = getBinComputedTimeSeries(obj,26);
+            value = getBinComputedTimeSeries(obj,26,varargin);
         end
-        function value = getBinComputedAllParameters(obj)
+        function value = getBinComputedAllParameters(obj,varargin)
             value=[];
-            [fid,binfile] = makebatfile(obj);
+            [fid,binfile] = makebatfile(obj,varargin);
             if fid~=-1
                 data = fread(fid,'int32');
                 fclose(fid);
@@ -5745,9 +5745,8 @@ classdef epanet <handle
                 value.BinNumberReportingPeriods2=fread(fid1, 1, 'uint32')';
                 value.BinWarningFlag=fread(fid1, 1, 'uint32')';
                 value.BinMagicNumber=fread(fid1, 1, 'uint32')';
-                
+                fclose(fid1);
             end
-            fclose(fid1);
             if fid==-1
                 fprintf('"Run was unsuccessful."\n');
             else
@@ -10791,7 +10790,7 @@ elseif strcmp(previousFlowUnits,'CMD')
     end
 end
 end
-function [fid,binfile] = makebatfile(obj)
+function [fid,binfile] = makebatfile(obj, varargin)
     [~,mm]=system(['cmd /c for %A in ("',pwd,'") do @echo %~sA']);
     mmPwd=regexp(mm,'\s','split');
     pp=[mmPwd{1},'/'];
@@ -10801,7 +10800,7 @@ function [fid,binfile] = makebatfile(obj)
     if exist(binfile)==2, fclose all; delete(binfile); end
 %     if strcmp(computer('arch'),'win64')
 %             folder='64bit';
-    r = sprintf('%s\\epanet2d.exe %s %s %s',mmPwd{1},inpfile,rptfile,binfile);
+    r = sprintf('%s\\%s.exe %s %s %s',mmPwd{1},varargin{1}{1},inpfile,rptfile,binfile);
 %     elseif strcmp(computer('arch'),'win32')
 %             folder='32bit';
 %         r = sprintf('%s\\%s\\epanet2d.exe %s %s %s',mmPwd{1},folder,inpfile,rptfile,binfile);
@@ -10810,7 +10809,7 @@ function [fid,binfile] = makebatfile(obj)
     fid = fopen(binfile,'r');
 end
 function value = getBinComputedTimeSeries(obj,indParam,varargin)
-    [fid,binfile] = makebatfile(obj);
+    [fid,binfile] = makebatfile(obj, varargin{1});
     value=[];
     if fid~=-1
         data = fread(fid,'int32');
