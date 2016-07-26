@@ -20,5 +20,84 @@ Function "ENsetcurve" is new.
 Function "ENsetcurvevalue" is new.
 
 
-Net1.inp
+Example_2.inp
 ----------------
+Difference in ENsaveinpfile. See Example_2.inp.html
+
+Difference in ENgeterror. 253
+Difference in demands: 2.010 
+Difference in flows: 2.010 
+Difference in heads: 3.971 
+Difference in headloss: 2.396 
+Difference in pressures: 4.339 
+Difference in velocity: 3.788 
+Difference in quality results: -0.202 
+Difference in version 200121 and 20100.
+Difference in tank diameter: -1.126 
+Difference in options quality tolerance: 0.564 
+Difference in setting time rule control step (bug): -1.477 
+Difference in setting link initial status: -0.000 
+Difference in setting node tank initial level: -0.699 
+Difference in settingting node tank maximum water level.
+Difference in setting time hydraulic step.
+Difference in setting pattern.
+Problem in writing line in Report File (new dll).
+Difference in write report.
+Difference in write report.
+Difference in write report.
+Difference in write report.
+Difference in write report.
+
+##############################################
+
+
+Net2.inp
+----------------
+Difference in ENsaveinpfile. See Net2.inp.html
+
+Difference in ENgeterror. 253
+Difference in demands: 3.369 
+Difference in flows: 3.369 
+Difference in heads: 4.515 
+Difference in headloss: 3.816 
+Difference in pressures: 4.816 
+Difference in velocity: 5.903 
+Difference in quality results: 2.561 
+Difference in version 200121 and 20100.
+Difference in tank diameter: -0.807 
+Difference in options quality tolerance: 0.564 
+Difference in setting time rule control step (bug): -2.556 
+Problem in writing line in Report File (new dll).
+Difference in write report.
+Difference in write report.
+Difference in write report.
+Difference in write report.
+Difference in write report.
+
+##############################################
+
+
+Net3.inp
+----------------
+Difference in ENsaveinpfile. See Net3.inp.html
+
+Difference in ENgeterror. 253
+Difference in demands: 3.436 
+Difference in flows: 3.010 
+Difference in heads: 4.816 
+Difference in headloss: 2.816 
+Difference in pressures: 5.118 
+Difference in velocity: 5.998 
+Difference in quality results: 3.599 
+Difference in version 200121 and 20100.
+Difference in tank diameter: -1.323 
+Difference in setting time rule control step (bug): -2.556 
+Problem in writing line in Report File (new dll).
+Difference in write report.
+Difference in write report.
+Difference in write report.
+Difference in write report.
+Difference in write report.
+
+##############################################
+
